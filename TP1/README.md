@@ -26,12 +26,12 @@ h. Conectar un bloque signal source a un file sink.
 Escriba un scrip de python que genere un archivo de una senoidal de 1kHz modulada en AM al 50% con una frecuencia de portadora de 1MHz.
 AM.py
 
-a) Implementar un detector sincronico en GNURadio que recupere el mensaje(__TpAMa.grc__)
+a) Implementar un detector sincronico en GNURadio que recupere el mensaje(__AM.grc__)
 
-b) Idem a pero utilizando detector de envolvente(__TpAMb.grc__)
+b) Idem a pero utilizando detector de envolvente(__AM.grc__)
 
 ### Transmisión de AM
-a) Diseñe un transmisor de AM en GNUradio de índice de modulación variable y utilice TpAMa.grc en otra PC para su verificación. V
+a) Diseñe un transmisor de AM en GNUradio de índice de modulación variable y utilice TpAMa.grc en otra PC para su verificación. V (__TPAMb.grc__)
 
 ### Recepción de FM en GNURadio
 Recepción de FM
@@ -39,7 +39,7 @@ Recepción de FM
 a) Utilizando el archivo espectro_2M.dat y  el bloque quadrature demod y obtenga la salida de audio demodulada de cada estación y a través de un selector poder conectar cada señal de audio a la placa de sonido.
 (__Tp2a.grc__)
 
-b) Escriba un scrip de python que permita moduladar una señal “mensaje” en FM y reciba como parametro ademas la desfiacion maxima de frecuencia y genere una señal de FM en banda base. (__FM.py__)
+b) Escriba un script de python que permita modular una señal “mensaje” en FM y reciba como parametro ademas la desfiacion maxima de frecuencia y genere una señal de FM en banda base. (__FM.py__)
 
 Entendiendo la función del bloque quadrature demod implemente en GNURadio la medición de desviación de portadora pico y RMS, utilice para este ejercicio la señal generada por FM.py.(__Tp2b.grc__)
 

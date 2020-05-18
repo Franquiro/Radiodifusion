@@ -374,7 +374,7 @@ class gnuAM(gr.top_block, Qt.QWidget):
         self.fir_filter_xxx_1.declare_sample_delay(0)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_multiply_conjugate_cc_0 = blocks.multiply_conjugate_cc(1)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, '/home/fran/Documents/UCA/4to año/Radiodifusión/git/Radiodifusion/TP1/Parte2/AM.dat', True, 0, 0)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, '/home/fran/Documents/UCA/4to año/Radiodifusión/git/Radiodifusion/TP1/Parte2/TPAMb.dat', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
         self.blocks_complex_to_mag_0 = blocks.complex_to_mag(1)
         self.analog_pll_refout_cc_0 = analog.pll_refout_cc(np.pi/200, 2*np.pi*(carrier_max_freq/samp_rate), 2*np.pi*(carrier_min_freq/samp_rate))
