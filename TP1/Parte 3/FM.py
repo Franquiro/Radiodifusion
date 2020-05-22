@@ -15,9 +15,11 @@ fmsg = 100e3 # Freq de mensaje
 Vc = 10 # Tension de carrier
 Vm = 1
 
-
+msj = np.cos(2*np.pi*fmsg*t)
+fs = 1/t[1]
 def mod_fm(Ac,Amsg,deltaf,fc,fmsg):
-    return Ac*np.cos(2*np.pi*fc*t+(Amsg*deltaf/fmsg)*np.sin(2*np.pi*fmsg*t),dtype="complex64")
+	return np.exp((2j*np.pi*deltaf/fs)*(np.cumsum(msj)),dtype="complex64")
+    #return Ac*np.cos(2*np.pi*fc*t+(Amsg*deltaf/fmsg)*np.sin(2*np.pi*fmsg*t),dtype="complex64")
 
 fm = mod_fm(Vc,Vm,deltaf,fc,fmsg)
 
