@@ -88,7 +88,7 @@ blocks:
     rangeType: float
     start: '0'
     step: '1'
-    stop: 100e3
+    stop: 16e3
     value: 1e3
     widget: counter_slider
   states:

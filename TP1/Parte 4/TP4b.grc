@@ -36,7 +36,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 100e3
+    value: 200e3
   states:
     bus_sink: false
     bus_source: false
@@ -44,6 +44,40 @@ blocks:
     coordinate: [184, 12]
     rotation: 0
     state: enabled
+- name: analog_const_source_x_0
+  id: analog_const_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 468.0]
+    rotation: 0
+    state: enabled
+- name: analog_const_source_x_0_0
+  id: analog_const_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 516.0]
+    rotation: 0
+    state: disabled
 - name: analog_sig_source_x_0
   id: analog_sig_source_x
   parameters:
@@ -65,7 +99,7 @@ blocks:
     bus_structure: null
     coordinate: [176, 204.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: analog_sig_source_x_1
   id: analog_sig_source_x
   parameters:
@@ -73,7 +107,7 @@ blocks:
     alias: ''
     amp: '1'
     comment: ''
-    freq: 2e3
+    freq: '800'
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
@@ -87,7 +121,7 @@ blocks:
     bus_structure: null
     coordinate: [176, 332.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: analog_sig_source_x_2
   id: analog_sig_source_x
   parameters:
@@ -164,7 +198,7 @@ blocks:
     bus_structure: null
     coordinate: [1072, 84.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_multiply_xx_0
   id: blocks_multiply_xx
   parameters:
@@ -411,6 +445,10 @@ blocks:
     state: true
 
 connections:
+- [analog_const_source_x_0, '0', blocks_add_xx_0, '0']
+- [analog_const_source_x_0, '0', blocks_sub_xx_0, '0']
+- [analog_const_source_x_0_0, '0', blocks_add_xx_0, '1']
+- [analog_const_source_x_0_0, '0', blocks_sub_xx_0, '1']
 - [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
 - [analog_sig_source_x_0, '0', blocks_sub_xx_0, '0']
 - [analog_sig_source_x_1, '0', blocks_add_xx_0, '1']

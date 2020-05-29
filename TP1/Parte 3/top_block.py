@@ -5,8 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: Not titled yet
-# Author: fran
+# Title: Top Block
 # GNU Radio version: 3.8.1.0
 
 from distutils.version import StrictVersion
@@ -26,21 +25,26 @@ from gnuradio import qtgui
 from gnuradio.filter import firdes
 import sip
 from gnuradio import analog
+import math
+from gnuradio import audio
 from gnuradio import blocks
+import pmt
+from gnuradio import filter
 from gnuradio import gr
 import sys
 import signal
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
+from gnuradio.qtgui import Range, RangeWidget
 from gnuradio import qtgui
 
-class TP4b(gr.top_block, Qt.QWidget):
+class top_block(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "Not titled yet")
+        gr.top_block.__init__(self, "Top Block")
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("Not titled yet")
+        self.setWindowTitle("Top Block")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -58,7 +62,7 @@ class TP4b(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "TP4b")
+        self.settings = Qt.QSettings("GNU Radio", "top_block")
 
         try:
             if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
@@ -71,12 +75,60 @@ class TP4b(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 200e3
+        self.samp_rate = samp_rate = 2e6
+        self.taps_951 = taps_951 = firdes.low_pass(1.0, samp_rate, 80e3,5e3, firdes.WIN_RECTANGULAR, 6.76)
+        self.range_vol = range_vol = 0.001
+        self.fsk_deviation_hz = fsk_deviation_hz = 75e3
+        self.central_freq = central_freq = 95.1
 
         ##################################################
         # Blocks
         ##################################################
-        self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
+        self._range_vol_range = Range(0, 0.1, 0.0001, 0.001, 200)
+        self._range_vol_win = RangeWidget(self._range_vol_range, self.set_range_vol, 'Volumen', "counter_slider", float)
+        self.top_grid_layout.addWidget(self._range_vol_win)
+        self._central_freq_range = Range(94.3, 95.9, 0.2, 95.1, 200)
+        self._central_freq_win = RangeWidget(self._central_freq_range, self.set_central_freq, 'Sintonizador', "counter_slider", float)
+        self.top_grid_layout.addWidget(self._central_freq_win)
+        self.rational_resampler_xxx_0 = filter.rational_resampler_fff(
+                interpolation=3,
+                decimation=125,
+                taps=None,
+                fractional_bw=None)
+        self.qtgui_waterfall_sink_x_0 = qtgui.waterfall_sink_c(
+            1024, #size
+            firdes.WIN_BLACKMAN_hARRIS, #wintype
+            0, #fc
+            samp_rate, #bw
+            "", #name
+            1 #number of inputs
+        )
+        self.qtgui_waterfall_sink_x_0.set_update_time(0.10)
+        self.qtgui_waterfall_sink_x_0.enable_grid(False)
+        self.qtgui_waterfall_sink_x_0.enable_axis_labels(True)
+
+
+
+        labels = ['', '', '', '', '',
+                  '', '', '', '', '']
+        colors = [0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+                  1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_waterfall_sink_x_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_waterfall_sink_x_0.set_line_label(i, labels[i])
+            self.qtgui_waterfall_sink_x_0.set_color_map(i, colors[i])
+            self.qtgui_waterfall_sink_x_0.set_line_alpha(i, alphas[i])
+
+        self.qtgui_waterfall_sink_x_0.set_intensity_range(-140, 10)
+
+        self._qtgui_waterfall_sink_x_0_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_0.pyqwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_waterfall_sink_x_0_win)
+        self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
             1024, #size
             samp_rate, #samp_rate
             "", #name
@@ -89,15 +141,15 @@ class TP4b(gr.top_block, Qt.QWidget):
 
         self.qtgui_time_sink_x_0.enable_tags(True)
         self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0.enable_autoscale(True)
+        self.qtgui_time_sink_x_0.enable_autoscale(False)
         self.qtgui_time_sink_x_0.enable_grid(False)
         self.qtgui_time_sink_x_0.enable_axis_labels(True)
         self.qtgui_time_sink_x_0.enable_control_panel(False)
         self.qtgui_time_sink_x_0.enable_stem_plot(False)
 
 
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
         widths = [1, 1, 1, 1, 1,
             1, 1, 1, 1, 1]
         colors = ['blue', 'red', 'green', 'black', 'cyan',
@@ -110,9 +162,12 @@ class TP4b(gr.top_block, Qt.QWidget):
             -1, -1, -1, -1, -1]
 
 
-        for i in range(1):
+        for i in range(2):
             if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_0.set_line_label(i, "Data {0}".format(i))
+                if (i % 2 == 0):
+                    self.qtgui_time_sink_x_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
+                else:
+                    self.qtgui_time_sink_x_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
             else:
                 self.qtgui_time_sink_x_0.set_line_label(i, labels[i])
             self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
@@ -123,13 +178,13 @@ class TP4b(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.qtgui_freq_sink_x_0 = qtgui.freq_sink_f(
+        self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
             1024, #size
             firdes.WIN_BLACKMAN_hARRIS, #wintype
             0, #fc
-            100e3, #bw
+            samp_rate, #bw
             "", #name
-            1
+            2
         )
         self.qtgui_freq_sink_x_0.set_update_time(0.10)
         self.qtgui_freq_sink_x_0.set_y_axis(-140, 10)
@@ -142,9 +197,8 @@ class TP4b(gr.top_block, Qt.QWidget):
         self.qtgui_freq_sink_x_0.enable_control_panel(False)
 
 
-        self.qtgui_freq_sink_x_0.set_plot_pos_half(not False)
 
-        labels = ['Total', 'Mono', 'Piloto', 'Estereo', '',
+        labels = ['', '', '', '', '',
             '', '', '', '', '']
         widths = [1, 1, 1, 1, 1,
             1, 1, 1, 1, 1]
@@ -153,7 +207,7 @@ class TP4b(gr.top_block, Qt.QWidget):
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
             1.0, 1.0, 1.0, 1.0, 1.0]
 
-        for i in range(1):
+        for i in range(2):
             if len(labels[i]) == 0:
                 self.qtgui_freq_sink_x_0.set_line_label(i, "Data {0}".format(i))
             else:
@@ -164,39 +218,32 @@ class TP4b(gr.top_block, Qt.QWidget):
 
         self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_freq_sink_x_0_win)
-        self.blocks_sub_xx_0 = blocks.sub_ff(1)
-        self.blocks_multiply_xx_0_0 = blocks.multiply_vff(1)
-        self.blocks_multiply_xx_0 = blocks.multiply_vff(1)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*1, '/home/fran/Documents/UCA/4to año/Radiodifusión/git/Radiodifusion/TP1/Parte 4/MPX.dat', False)
-        self.blocks_file_sink_0.set_unbuffered(False)
-        self.blocks_add_xx_0_0 = blocks.add_vff(1)
-        self.blocks_add_xx_0 = blocks.add_vff(1)
-        self.analog_sig_source_x_2 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 19e3, 1, 0, 0)
-        self.analog_sig_source_x_1 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 800, 1, 0, 0)
-        self.analog_const_source_x_0 = analog.sig_source_f(0, analog.GR_CONST_WAVE, 0, 0, 0)
+        self.freq_xlating_fir_filter_xxx_0 = filter.freq_xlating_fir_filter_ccc(1, taps_951, central_freq*1e6 - 95100000, samp_rate)
+        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
+        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_ff(range_vol)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, '/home/fran/Documents/UCA/4to año/Radiodifusión/Prácticas/espectro_2M', True, 0, 0)
+        self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
+        self.audio_sink_0 = audio.sink(48000, '', False)
+        self.analog_quadrature_demod_cf_1 = analog.quadrature_demod_cf(samp_rate/(2*math.pi*fsk_deviation_hz/8.0))
 
 
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_const_source_x_0, 0), (self.blocks_add_xx_0, 0))
-        self.connect((self.analog_const_source_x_0, 0), (self.blocks_sub_xx_0, 0))
-        self.connect((self.analog_sig_source_x_1, 0), (self.blocks_add_xx_0, 1))
-        self.connect((self.analog_sig_source_x_1, 0), (self.blocks_sub_xx_0, 1))
-        self.connect((self.analog_sig_source_x_2, 0), (self.blocks_add_xx_0_0, 0))
-        self.connect((self.analog_sig_source_x_2, 0), (self.blocks_multiply_xx_0, 1))
-        self.connect((self.analog_sig_source_x_2, 0), (self.blocks_multiply_xx_0, 0))
-        self.connect((self.blocks_add_xx_0, 0), (self.blocks_add_xx_0_0, 2))
-        self.connect((self.blocks_add_xx_0_0, 0), (self.blocks_file_sink_0, 0))
-        self.connect((self.blocks_add_xx_0_0, 0), (self.qtgui_freq_sink_x_0, 0))
-        self.connect((self.blocks_add_xx_0_0, 0), (self.qtgui_time_sink_x_0, 0))
-        self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_multiply_xx_0_0, 0))
-        self.connect((self.blocks_multiply_xx_0_0, 0), (self.blocks_add_xx_0_0, 1))
-        self.connect((self.blocks_sub_xx_0, 0), (self.blocks_multiply_xx_0_0, 1))
+        self.connect((self.analog_quadrature_demod_cf_1, 0), (self.rational_resampler_xxx_0, 0))
+        self.connect((self.blocks_file_source_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.audio_sink_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.freq_xlating_fir_filter_xxx_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.qtgui_freq_sink_x_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.qtgui_waterfall_sink_x_0, 0))
+        self.connect((self.freq_xlating_fir_filter_xxx_0, 0), (self.analog_quadrature_demod_cf_1, 0))
+        self.connect((self.freq_xlating_fir_filter_xxx_0, 0), (self.qtgui_freq_sink_x_0, 1))
+        self.connect((self.freq_xlating_fir_filter_xxx_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_multiply_const_vxx_0, 0))
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "TP4b")
+        self.settings = Qt.QSettings("GNU Radio", "top_block")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
@@ -205,13 +252,43 @@ class TP4b(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.analog_sig_source_x_1.set_sampling_freq(self.samp_rate)
-        self.analog_sig_source_x_2.set_sampling_freq(self.samp_rate)
+        self.analog_quadrature_demod_cf_1.set_gain(self.samp_rate/(2*math.pi*self.fsk_deviation_hz/8.0))
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.qtgui_freq_sink_x_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
+        self.qtgui_waterfall_sink_x_0.set_frequency_range(0, self.samp_rate)
+
+    def get_taps_951(self):
+        return self.taps_951
+
+    def set_taps_951(self, taps_951):
+        self.taps_951 = taps_951
+        self.freq_xlating_fir_filter_xxx_0.set_taps(self.taps_951)
+
+    def get_range_vol(self):
+        return self.range_vol
+
+    def set_range_vol(self, range_vol):
+        self.range_vol = range_vol
+        self.blocks_multiply_const_vxx_0.set_k(self.range_vol)
+
+    def get_fsk_deviation_hz(self):
+        return self.fsk_deviation_hz
+
+    def set_fsk_deviation_hz(self, fsk_deviation_hz):
+        self.fsk_deviation_hz = fsk_deviation_hz
+        self.analog_quadrature_demod_cf_1.set_gain(self.samp_rate/(2*math.pi*self.fsk_deviation_hz/8.0))
+
+    def get_central_freq(self):
+        return self.central_freq
+
+    def set_central_freq(self, central_freq):
+        self.central_freq = central_freq
+        self.freq_xlating_fir_filter_xxx_0.set_center_freq(self.central_freq*1e6 - 95100000)
 
 
 
-def main(top_block_cls=TP4b, options=None):
+def main(top_block_cls=top_block, options=None):
 
     if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
         style = gr.prefs().get_string('qtgui', 'style', 'raster')
