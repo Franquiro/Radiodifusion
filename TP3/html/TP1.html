@@ -1,0 +1,515 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>TP2 Parte 1 - Matlab</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-06-04"><meta name="DC.source" content="TP1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>TP2 Parte 1 - Matlab</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Punto a</a></li><li><a href="#4">Punto b</a></li><li><a href="#5">Punto c</a></li><li><a href="#6">Punto c</a></li><li><a href="#7">Parte 2</a></li></ul></div><h2 id="1">Punto a</h2><p>cargo la imagen para trabajar</p><pre class="codeinput">[img,map] = imread(<span class="string">"/home/fran/Documents/UCA/4to a&ntilde;o/Radiodifusi&oacute;n/git/Radiodifusion/TP3/res/D_avocado.jpg"</span>);
+
+figure()
+title(<span class="string">"Shoey"</span>)
+imshow(img)
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 50% 
+</pre><img vspace="5" hspace="5" src="TP1_01.png" alt=""> <p>Separo la imagen original en matrices R, G y B.</p><pre class="codeinput">figure()
+subplot(221)
+imshow(img)
+title(<span class="string">"Shoey Color"</span>)
+img_color = img;
+
+[m n z] = size(img);
+
+<span class="comment">% genero una matriz R recorriendo la imagen y anulando las propiedades de G</span>
+<span class="comment">% y B en cada pixel.</span>
+
+<span class="keyword">for</span> i=1:m
+    <span class="keyword">for</span> j=1:n
+        img(i,j,2) = 0;
+        img(i,j,3) = 0;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+img_R = img;
+subplot(222);
+imshow(img_R);
+title(<span class="string">"Shoey R"</span>)
+img = img_color;
+
+<span class="comment">% genero una matriz G recorriendo la imagen y anulando las propiedades de R</span>
+<span class="comment">% y B en cada pixel.</span>
+
+<span class="keyword">for</span> i=1:m
+    <span class="keyword">for</span> j=1:n
+        img(i,j,1) = 0;
+        img(i,j,3) = 0;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+img_G = img;
+subplot(223)
+imshow(img_G);
+title(<span class="string">"Shoey G"</span>)
+img = img_color;
+<span class="comment">% genero una matriz B recorriendo la imagen y anulando las propiedades de G</span>
+<span class="comment">% y R en cada pixel.</span>
+<span class="keyword">for</span> i=1:m
+    <span class="keyword">for</span> j=1:n
+        img(i,j,1) = 0;
+        img(i,j,2) = 0;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+img_B = img;
+subplot(224)
+imshow(img_B);
+title(<span class="string">"Shoey B"</span>)
+
+img = img_color;
+</pre><img vspace="5" hspace="5" src="TP1_02.png" alt=""> <img vspace="5" hspace="5" src="TP1_03.png" alt=""> <p>Generacion de imagen en escala de grises: tomo la imagen y para cada pixel comparo sus valores de R,G y B. luego asigno un mismo valor para las 3 componentes, dando as&iacute; un tono de gris. Este valor podr&iacute;a ser tomado como el m&aacute;ximo, para una imagen mas luminosa, el minimo para una imagen mas oscura o un valor medio de los tres. Particularmente tom&eacute; el valor m&aacute;ximo para que se obtenga una imagen con mas brillo y se aprecien mas los detalles oscuros.</p><pre class="codeinput"><span class="keyword">for</span> i=1:m
+    <span class="keyword">for</span> j=1:n
+        <span class="keyword">if</span> img(i,j,1)&gt;img(i,j,2) &amp;&amp; img(i,j,1)&gt;img(i,j,3)
+           img(i,j,2) = img(i,j,1);
+           img(i,j,3) = img(i,j,1);
+        <span class="keyword">else</span> <span class="keyword">if</span> img(i,j,2)&gt;img(i,j,1) &amp;&amp; img(i,j,2)&gt;img(i,j,3)
+                img(i,j,1) = img(i,j,2);
+                img(i,j,3) = img(i,j,2);
+            <span class="keyword">else</span>
+                img(i,j,1) = img(i,j,3);
+                img(i,j,2) = img(i,j,3);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+img_bw = img;
+figure()
+imshow(img_bw)
+title(<span class="string">"Shoey BW"</span>)
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 50% 
+</pre><img vspace="5" hspace="5" src="TP1_04.png" alt=""> <img vspace="5" hspace="5" src="TP1_05.png" alt=""> <h2 id="4">Punto b</h2><p>Amplificar la componente de rojo</p><pre class="codeinput">img = img_color;
+incremento = 70; <span class="comment">% de 0 a 255</span>
+<span class="keyword">for</span> i=1:m
+    <span class="keyword">for</span> j=1:n
+        <span class="keyword">if</span> img(i,j,1)&lt;(256 - incremento)
+            img(i,j,1) = img(i,j,1) + incremento;
+        <span class="keyword">else</span>
+            img(i,j,1) = 255;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+figure()
+imshow(img)
+title(<span class="string">"Imagen original con incremento de rojo"</span>)
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 50% 
+</pre><img vspace="5" hspace="5" src="TP1_06.png" alt=""> <img vspace="5" hspace="5" src="TP1_07.png" alt=""> <h2 id="5">Punto c</h2><p>Generamos un histograma de la imagen en escala de grises.</p><pre class="codeinput">figure()
+imhist(img_bw)
+title(<span class="string">"Histograma BW"</span>)
+</pre><img vspace="5" hspace="5" src="TP1_08.png" alt=""> <img vspace="5" hspace="5" src="TP1_09.png" alt=""> <img vspace="5" hspace="5" src="TP1_10.png" alt=""> <h2 id="6">Punto c</h2><p>Aplico la transformada discreta coseno a bloques de 8x8 y, aplico distintas matrices de cuantizaci&oacute;n para verificar la calidad de la imagen comprimida.</p><pre class="codeinput"><span class="keyword">for</span> i=1:m
+    <span class="keyword">for</span> j=1:n
+        IM(i,j) = img_bw(i,j,1);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+img_double = im2double(IM);
+TM = dctmtx(8);
+dct = @(block_struct) TM*block_struct.data*TM';
+BP = blockproc(img_double,[8 8],dct);
+
+mask1 = [1   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0];
+
+mask2 = [1   1   0   0   0   0   0   0
+         1   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0];
+
+mask3 = [1   1   1   0   0   0   0   0
+         1   1   0   0   0   0   0   0
+         1   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0];
+
+B1 = blockproc(BP,[8 8],@(block_struct) mask1 .* block_struct.data);
+B2 = blockproc(BP,[8 8],@(block_struct) mask2 .* block_struct.data);
+B3 = blockproc(BP,[8 8],@(block_struct) mask3 .* block_struct.data);
+
+invdct = @(block_struct) TM' * block_struct.data * TM;
+
+I1 = blockproc(B1,[8 8],invdct);
+I2 = blockproc(B2,[8 8],invdct);
+I3 = blockproc(B3,[8 8],invdct);
+
+figure()
+
+subplot(222)
+imshow(I1)
+title(<span class="string">"DCT - Mayor compresion"</span>)
+zoom(4)
+
+subplot(221)
+imshow(img_bw)
+title(<span class="string">"Original"</span>)
+zoom(4)
+
+subplot(223)
+imshow(I2)
+title(<span class="string">"DCT - Compresion media"</span>)
+zoom(4)
+
+subplot(224)
+imshow(I3)
+title(<span class="string">"DCT - Menor compresion"</span>)
+zoom(4)
+</pre><img vspace="5" hspace="5" src="TP1_11.png" alt=""> <h2 id="7">Parte 2</h2><pre class="codeinput">[minions,minions_map] = imread(<span class="string">"/home/fran/Documents/UCA/4to a&ntilde;o/Radiodifusi&oacute;n/git/Radiodifusion/TP3/res/Minions-gif-jpg/frame_00_delay-0.1s.jpg"</span>);
+[minions2,minions2_map] = imread(<span class="string">"/home/fran/Documents/UCA/4to a&ntilde;o/Radiodifusi&oacute;n/git/Radiodifusion/TP3/res/Minions-gif-jpg/frame_01_delay-0.1s.jpg"</span>);
+figure()
+subplot(221)
+imshow(minions)
+title(<span class="string">"Frame 00"</span>)
+subplot(222)
+imshow(minions2)
+title(<span class="string">"Frame 01"</span>)
+subplot(223)
+imhist(minions)
+title(<span class="string">"Histograma Frame 00"</span>)
+subplot(224)
+imhist(minions2)
+title(<span class="string">"Histograma Frame 01"</span>)
+
+[m n z] = size(minions);
+<span class="keyword">for</span> i = 1:m
+    <span class="keyword">for</span> j = 1:n
+        dif_minions(i,j) = minions2(i,j) - minions(i,j);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+figure()
+subplot(231)
+imshow(minions)
+title(<span class="string">"Frame 00"</span>)
+subplot(233)
+imshow(minions2)
+title(<span class="string">"Frame 01"</span>)
+subplot(232)
+imshow(dif_minions)
+title(<span class="string">"Diferencia de cuadros"</span>)
+subplot(234)
+imhist(minions)
+title(<span class="string">"Histograma Frame 00"</span>)
+subplot(236)
+imhist(minions2)
+title(<span class="string">"Histograma Frame 01"</span>)
+subplot(235)
+imhist(dif_minions)
+title(<span class="string">"Histograma Diferencia"</span>)
+</pre><img vspace="5" hspace="5" src="TP1_12.png" alt=""> <img vspace="5" hspace="5" src="TP1_13.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% TP2 Parte 1 - Matlab
+
+%% Punto a
+% cargo la imagen para trabajar
+[img,map] = imread("/home/fran/Documents/UCA/4to año/Radiodifusión/git/Radiodifusion/TP3/res/D_avocado.jpg");
+
+figure()
+title("Shoey")
+imshow(img)
+
+
+%%
+% Separo la imagen original en matrices R, G y B.
+
+figure()
+subplot(221)
+imshow(img)
+title("Shoey Color")
+img_color = img;
+
+[m n z] = size(img);
+
+% genero una matriz R recorriendo la imagen y anulando las propiedades de G
+% y B en cada pixel.
+
+for i=1:m
+    for j=1:n
+        img(i,j,2) = 0;
+        img(i,j,3) = 0;
+    end
+end
+
+img_R = img;
+subplot(222);
+imshow(img_R);
+title("Shoey R")
+img = img_color;
+
+% genero una matriz G recorriendo la imagen y anulando las propiedades de R
+% y B en cada pixel.
+
+for i=1:m
+    for j=1:n
+        img(i,j,1) = 0;
+        img(i,j,3) = 0;
+    end
+end
+img_G = img;
+subplot(223)
+imshow(img_G);
+title("Shoey G")
+img = img_color;
+% genero una matriz B recorriendo la imagen y anulando las propiedades de G
+% y R en cada pixel.
+for i=1:m
+    for j=1:n
+        img(i,j,1) = 0;
+        img(i,j,2) = 0;
+    end
+end
+img_B = img;
+subplot(224)
+imshow(img_B);
+title("Shoey B")
+
+img = img_color;
+%%
+% Generacion de imagen en escala de grises:
+% tomo la imagen y para cada pixel comparo sus valores de R,G y B.
+% luego asigno un mismo valor para las 3 componentes, dando así un tono de
+% gris.
+% Este valor podría ser tomado como el máximo, para una imagen mas
+% luminosa, el minimo para una imagen mas oscura o un valor medio de los
+% tres. Particularmente tomé el valor máximo para que se obtenga una imagen
+% con mas brillo y se aprecien mas los detalles oscuros.
+
+for i=1:m
+    for j=1:n
+        if img(i,j,1)>img(i,j,2) && img(i,j,1)>img(i,j,3)
+           img(i,j,2) = img(i,j,1);
+           img(i,j,3) = img(i,j,1);
+        else if img(i,j,2)>img(i,j,1) && img(i,j,2)>img(i,j,3)
+                img(i,j,1) = img(i,j,2);
+                img(i,j,3) = img(i,j,2);
+            else
+                img(i,j,1) = img(i,j,3);
+                img(i,j,2) = img(i,j,3);
+            end
+        end
+    end
+end
+img_bw = img;
+figure()
+imshow(img_bw)
+title("Shoey BW")
+
+%% Punto b
+% Amplificar la componente de rojo
+img = img_color;
+incremento = 70; % de 0 a 255
+for i=1:m
+    for j=1:n
+        if img(i,j,1)<(256 - incremento)
+            img(i,j,1) = img(i,j,1) + incremento;
+        else
+            img(i,j,1) = 255;
+        end
+    end
+end
+figure()
+imshow(img)
+title("Imagen original con incremento de rojo")
+%% Punto c
+% Generamos un histograma de la imagen en escala de grises.
+
+figure()
+imhist(img_bw)
+title("Histograma BW")
+
+
+%% Punto c
+% Aplico la transformada discreta coseno a bloques de 8x8 y, aplico
+% distintas matrices de cuantización para verificar la calidad de la imagen
+% comprimida.
+
+for i=1:m
+    for j=1:n
+        IM(i,j) = img_bw(i,j,1);
+    end
+end
+
+img_double = im2double(IM);
+TM = dctmtx(8);
+dct = @(block_struct) TM*block_struct.data*TM';
+BP = blockproc(img_double,[8 8],dct);
+
+mask1 = [1   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0];
+     
+mask2 = [1   1   0   0   0   0   0   0
+         1   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0];
+     
+mask3 = [1   1   1   0   0   0   0   0
+         1   1   0   0   0   0   0   0
+         1   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0
+         0   0   0   0   0   0   0   0];
+     
+B1 = blockproc(BP,[8 8],@(block_struct) mask1 .* block_struct.data);
+B2 = blockproc(BP,[8 8],@(block_struct) mask2 .* block_struct.data);
+B3 = blockproc(BP,[8 8],@(block_struct) mask3 .* block_struct.data);
+
+invdct = @(block_struct) TM' * block_struct.data * TM;
+
+I1 = blockproc(B1,[8 8],invdct);
+I2 = blockproc(B2,[8 8],invdct);
+I3 = blockproc(B3,[8 8],invdct);
+
+figure()
+
+subplot(222)
+imshow(I1)
+title("DCT - Mayor compresion")
+zoom(4)
+
+subplot(221)
+imshow(img_bw)
+title("Original")
+zoom(4)
+
+subplot(223)
+imshow(I2)
+title("DCT - Compresion media")
+zoom(4)
+
+subplot(224)
+imshow(I3)
+title("DCT - Menor compresion")
+zoom(4)
+
+%% Parte 2
+[minions,minions_map] = imread("/home/fran/Documents/UCA/4to año/Radiodifusión/git/Radiodifusion/TP3/res/Minions-gif-jpg/frame_00_delay-0.1s.jpg");
+[minions2,minions2_map] = imread("/home/fran/Documents/UCA/4to año/Radiodifusión/git/Radiodifusion/TP3/res/Minions-gif-jpg/frame_01_delay-0.1s.jpg");
+figure()
+subplot(221)
+imshow(minions)
+title("Frame 00")
+subplot(222)
+imshow(minions2)
+title("Frame 01")
+subplot(223)
+imhist(minions)
+title("Histograma Frame 00")
+subplot(224)
+imhist(minions2)
+title("Histograma Frame 01")
+
+[m n z] = size(minions);
+for i = 1:m
+    for j = 1:n
+        dif_minions(i,j) = minions2(i,j) - minions(i,j);
+    end
+end
+figure()
+subplot(231)
+imshow(minions)
+title("Frame 00")
+subplot(233)
+imshow(minions2)
+title("Frame 01")
+subplot(232)
+imshow(dif_minions)
+title("Diferencia de cuadros")
+subplot(234)
+imhist(minions)
+title("Histograma Frame 00")
+subplot(236)
+imhist(minions2)
+title("Histograma Frame 01")
+subplot(235)
+imhist(dif_minions)
+title("Histograma Diferencia")
+##### SOURCE END #####
+--></body></html>

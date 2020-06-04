@@ -26,7 +26,6 @@ from gnuradio import qtgui
 from gnuradio.filter import firdes
 import sip
 from gnuradio import analog
-import math
 from gnuradio import audio
 from gnuradio import blocks
 import pmt
@@ -90,13 +89,13 @@ class TP2d(gr.top_block, Qt.QWidget):
         ##################################################
         _btn_right_push_button = Qt.QPushButton('L+R')
         _btn_right_push_button = Qt.QPushButton('L+R')
-        self._btn_right_choices = {'Pressed': 1, 'Released': 0}
+        self._btn_right_choices = {'Pressed': 10, 'Released': 0}
         _btn_right_push_button.pressed.connect(lambda: self.set_btn_right(self._btn_right_choices['Pressed']))
         _btn_right_push_button.released.connect(lambda: self.set_btn_right(self._btn_right_choices['Released']))
         self.top_grid_layout.addWidget(_btn_right_push_button)
         _btn_left_push_button = Qt.QPushButton('L-R')
         _btn_left_push_button = Qt.QPushButton('L-R')
-        self._btn_left_choices = {'Pressed': 1, 'Released': 0}
+        self._btn_left_choices = {'Pressed': 10, 'Released': 0}
         _btn_left_push_button.pressed.connect(lambda: self.set_btn_left(self._btn_left_choices['Pressed']))
         _btn_left_push_button.released.connect(lambda: self.set_btn_left(self._btn_left_choices['Released']))
         self.top_grid_layout.addWidget(_btn_left_push_button)
@@ -207,29 +206,29 @@ class TP2d(gr.top_block, Qt.QWidget):
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_const_vxx_0_0 = blocks.multiply_const_ff(btn_right)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_ff(btn_left)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, '/home/fran/Documents/UCA/4to año/Radiodifusión/git/Radiodifusion/TP1/Parte 3/radio_240k.dat', True, 0, 0)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, '/home/fran/Documents/UCA/4to año/Radiodifusión/git/Radiodifusion/TP1/Parte 4/MPX.dat', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
+        self.blocks_complex_to_mag_1 = blocks.complex_to_mag(1)
         self.blocks_complex_to_mag_0 = blocks.complex_to_mag(1)
         self.blocks_add_xx_0 = blocks.add_vff(1)
         self.audio_sink_0_0 = audio.sink(48000, '', True)
         self.audio_sink_0 = audio.sink(48000, '', True)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 19e3, 1, 0, 0)
-        self.analog_quadrature_demod_cf_0 = analog.quadrature_demod_cf(samp_rate/(2*math.pi*fsk_deviation_hz))
 
 
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_quadrature_demod_cf_0, 0), (self.blocks_multiply_xx_1, 0))
-        self.connect((self.analog_quadrature_demod_cf_0, 0), (self.fir_filter_xxx_0, 0))
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.blocks_add_xx_0, 0), (self.qtgui_freq_sink_x_0_0, 0))
         self.connect((self.blocks_add_xx_0, 0), (self.qtgui_time_sink_x_0_0, 0))
         self.connect((self.blocks_add_xx_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_complex_to_mag_0, 0), (self.blocks_multiply_xx_1, 1))
-        self.connect((self.blocks_file_source_0, 0), (self.analog_quadrature_demod_cf_0, 0))
+        self.connect((self.blocks_complex_to_mag_1, 0), (self.blocks_multiply_xx_1, 0))
+        self.connect((self.blocks_complex_to_mag_1, 0), (self.fir_filter_xxx_0, 0))
+        self.connect((self.blocks_file_source_0, 0), (self.blocks_complex_to_mag_1, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.audio_sink_0_0, 0))
         self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.audio_sink_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_complex_to_mag_0, 0))
@@ -254,7 +253,6 @@ class TP2d(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.analog_quadrature_demod_cf_0.set_gain(self.samp_rate/(2*math.pi*self.fsk_deviation_hz))
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
         self.qtgui_freq_sink_x_0_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_time_sink_x_0_0.set_samp_rate(self.samp_rate)
@@ -264,7 +262,6 @@ class TP2d(gr.top_block, Qt.QWidget):
 
     def set_fsk_deviation_hz(self, fsk_deviation_hz):
         self.fsk_deviation_hz = fsk_deviation_hz
-        self.analog_quadrature_demod_cf_0.set_gain(self.samp_rate/(2*math.pi*self.fsk_deviation_hz))
 
     def get_carrier_min(self):
         return self.carrier_min
